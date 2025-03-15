@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite" // Change this based on your DB (e.g., "postgresql" or "mysql")
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id       Int       @id @default(autoincrement())
+  email    String    @unique
+  password String
+  profile  Profile?
+  modules  Module[]
+}
+
+model Profile {
+  id        Int     @id @default(autoincrement())
+  name      String
+  age       Int
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int @unique
+}
+
+model Module {
+  id        Int     @id @default(autoincrement())
+  name      String
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+}
